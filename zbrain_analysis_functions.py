@@ -3,7 +3,7 @@
 """
 Created on Thu Sep 26 14:42:02 2019
 
-@author: tracingpc1
+@author: Zachary Miller
 """
 import os
 import numpy as np
@@ -13,7 +13,7 @@ import pandas as pd
 import skimage as si
 import time
 
-def read_img_dir(dir_path):
+def read_img_dir(dir_path, as_float):
     """Reads in all images located inside the specified directory as numpy arrays using
     skimage. The directory should contain only the images and all images should be in a 
     format supported by skimage"""
@@ -24,7 +24,10 @@ def read_img_dir(dir_path):
     for file in os.listdir(img_directory):
         filename = os.fsdecode(file)
         file_path = os.path.join(dir_path, filename)
-        img_list.append(si.io.imread(file_path))
+        if as_float == True:
+            img_list.append(si.img_as_float(si.io.imread(file_path)))
+        elif as_float == False:
+            img_list.append(si.io.imread(file_path))
         
     return img_list
 
@@ -147,4 +150,9 @@ def df_from_file_sample(sample_lines):
     df = df.apply(pd.to_numeric)
     
     return df
+
+def log_modulus_transform(x):
+    x = np.sign(x)*(np.log10(abs(x)+1))
+    return x
+
     
