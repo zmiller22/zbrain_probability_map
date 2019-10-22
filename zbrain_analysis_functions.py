@@ -32,7 +32,7 @@ def read_img_dir(dir_path, as_float):
     return img_list
 
 def get_voxel_vector(z, x, y, img_list):
-    """Returns a numpy vecotr of the values contained in voxel x,y,z for each image stack
+    """Returns a numpy vector of the values contained in voxel x,y,z for each image stack
     in img_list"""
     
     vox_list = []
@@ -43,39 +43,6 @@ def get_voxel_vector(z, x, y, img_list):
     vox_vec = np.array(vox_list)
     
     return vox_vec
-
-# I am going to test writing this to a data file instead of reading it into a list...
-# =============================================================================
-# def get_voxel_data(img_list):
-#     """Given a list of images (as numpy arrays), iterates through all the images in the 
-#     list for each voxel in the in the images, collecting a vector of all the voxel values,
-#     the mean value of the voxel, and the sd of that voxel"""
-#     start = time.time()
-#     
-#     dims = img_list[0].shape
-#     row_list = []
-#     name_list = []
-#     
-#     
-#     # Iterate over each voxel
-#     for z in range(dims[0]):
-#         for y in range(dims[1]):
-#             for x in range(dims[2]):
-#                 vox_vals = []
-#                 # For each voxel, iterate over each image in the img_list
-#                 for img in img_list:
-#                     vox_vals.append(img[z,y,x])
-#                 name = str(z)+"_"+str(y)+"_"+str(x)
-#                 
-#                 row_list.append({"Voxel Values":[vox_vals], "Mean":np.mean(vox_vals),
-#                                  "SD":np.std(vox_vals)})
-#                 name_list.append(name)
-#     
-#     vox_df = pd.DataFrame(row_list, index=name_list)
-#     end = time.time()
-#     print(end-start)
-#     return vox_df
-# =============================================================================
 
 def create_voxel_data_file(img_list, file_name):
     """Given a list of images (as numpy arrays), iterates trhough all the images in the
@@ -132,6 +99,7 @@ def reservoir_sample_file(data_file, sample_size):
     return reservoir
 
 def sample_file_lines(data_file, sample_size):
+    #TODO This takes like 30 seconds, there is probably a faster way
     """Takes a random sample of the lines in a data file and returns them as a list of 
     strings"""
     file = open(data_file)
@@ -142,6 +110,8 @@ def sample_file_lines(data_file, sample_size):
     return sample_lines
 
 def df_from_file_sample(sample_lines):
+    #TODO the dtype of the final dataframe keeps being int64, see if we can force uint16
+    # to save memory
     """Given a list of line strings from a data_file, creates a numeric pandas dataframe,
     assumes that the first column in the dataframe is the row name"""
     sample_lines = [i.strip("\n").split() for i in sample_lines]
