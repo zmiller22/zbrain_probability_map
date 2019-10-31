@@ -123,6 +123,16 @@ def df_from_file_sample(sample_lines):
 
 def log_modulus_transform(x):
     x = np.sign(x)*(np.log10(abs(x)+1))
+    
     return x
+
+def save_img_list_as_array(img_list, file_name):
+    """Saves an image list as a single NxZxYxX numpy array"""
+    
+    img_arr = np.asarray(img_list)
+    np.save(file_name, img_arr)
+    
+    return None
+
 
     

@@ -16,7 +16,12 @@ gad_mean_arr = np.empty((138,1406,621),dtype=np.uint16)
 gad_var_arr = np.empty((138,1406,621),dtype=np.uint16)
 
 
+
+
 #%% Read the image stacks into a list of image stacks
+
+#TODO change this to take advantage of the new image stack arrays instead of lists
+
 mean_gad_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/zbrain_images/Gad1b-GFP-combined.tif"
 #mean_glut_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/zbrain_images/Vglut2a-GFP-combined.tif"
 
