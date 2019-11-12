@@ -134,5 +134,8 @@ def save_img_list_as_array(img_list, file_name):
     
     return None
 
+#TODO write a function that takes in an array and turns it into a list along its last 
+# dimension
+
 
     

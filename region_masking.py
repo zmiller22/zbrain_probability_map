@@ -3,20 +3,26 @@
 """
 Created on Tue Oct 29 15:53:42 2019
 
-@author: tracingpc1
+@author: Zachary Miller
+
+Gets the mean of each MECE region in all glut and gad images and saves the results a 3d 
+3d array for each
 """
 #%% Import dependencies
 import scipy.io
 import os
 import numpy as np
 import skimage as si
+import zbrain_analysis_functions as my_func
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 #%% Set paths
+# This path should be a folder containing the MECE masks
 MECE_masks_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/MECE-Masks"
-gad_img_arr_path = "gad_img_stacks_arr.npy"
-glut_img_arr_path = "glut_img_stacks_arr.npy"
+# These paths should be the files containing the images as 4d arrays
+gad_img_arr_path = "created_data/gad_img_stacks_arr.npy"
+glut_img_arr_path = "created_data/glut_img_stacks_arr.npy"
 #%% Read in the image arrays
 gad_img_arr = np.load(gad_img_arr_path)
 glut_img_arr = np.load(glut_img_arr_path)
@@ -46,28 +52,10 @@ for mask_file in os.listdir(directory):
         # get masked means
         masked_gad_means_list.append([np.mean(gad_img_arr[i, :, :, :][mask]) for i in range(gad_img_num)])
         masked_glut_means_list.append([np.mean(glut_img_arr[i, :, :, :][mask]) for i in range(glut_img_num)])
-        
-#%% Create mean vs variance scatter plots
-# Get the means and variances accross image stacks for each region
-gad_means = [np.mean(vals) for vals in masked_gad_means_list]
-glut_means = [np.mean(vals) for vals in masked_glut_means_list]
 
-gad_vars = [np.var(vals) for vals in masked_gad_means_list]
-glut_vars = [np.var(vals) for vals in masked_glut_means_list]
+#%% Save the results as 3d arrays      
+my_func.save_img_list_as_array(masked_gad_means_list, "created_data/gad_MECE_mask_means")
+my_func.save_img_list_as_array(masked_glut_means_list, "created_data/glut_MECE_mask_means")
 
-max_volume = np.max(mask_volume_list)
-mask_volume_list = [vol/max_volume for vol in mask_volume_list]
-
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20,10))
-c = ax1.scatter(gad_means, gad_vars, c=mask_volume_list, s=80, alpha=0.8)
-ax1.set_title("Gad", fontsize=16)
-ax2.scatter(glut_means, glut_vars, c=mask_volume_list, s=80, alpha=0.8)
-ax2.yaxis.tick_right()
-ax2.set_title("Glut", fontsize=16)
-
-cbar_ax = fig.add_axes([0.5, 0.13, 0.02, 0.4])
-fig.colorbar(c, cax=cbar_ax, orientation="vertical")
-fig.text(0.51, 0, "Mean", ha="center", fontsize=16)
-fig.text(0.05, 0.5, "Variance", rotation="vertical", fontsize=16)
-fig.text(0.7, 0, "*Color indicates relative region size", fontsize=16)
-fig.suptitle("Mean vs. Variance for MECE Regions", fontsize=20)
+np.save("created_data/MECE_mask_names", np.asarray(mask_names_list))
+np.save("created_data/MECE_mask_volumes", np.asarray(mask_volume_list))    

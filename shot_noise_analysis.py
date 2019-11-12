@@ -3,7 +3,7 @@
 """
 Created on Tue Oct 22 13:42:50 2019
 
-@author: tracingpc1
+@author: Zachary Miller
 """
 
 import skimage as si
@@ -31,8 +31,8 @@ indiv_gad_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/Gad1b_indivi
 gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=False)
 #glut_img_list = my_func.read_img_dir(indiv_glut_path, as_float=False)
 
-#%% Get the normalized mean, varianve, and difference between the mean and variance of each
-# voxel accross the images
+#%% Get the normalized mean, variance, and difference between the mean and variance of each
+# voxel accross the gad images
 gad_img_arr = np.stack(gad_img_list)
 
 gad_mean_arr = np.rint(np.mean(gad_img_arr, axis=0))
