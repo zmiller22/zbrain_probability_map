@@ -15,9 +15,12 @@ import zbrain_analysis_functions as my_func
 indiv_gad_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/Gad1b_individual_zbrain_stacks"
 indiv_glut_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/vglutGFP_individual_zbrain_stacks"
 
-gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=False)
-glut_img_list = my_func.read_img_dir(indiv_glut_path, as_float=False)
+gad_img_list, gad_img_names_list = my_func.read_img_dir(indiv_gad_path, as_float=False)
+glut_img_list, glut_img_names_list = my_func.read_img_dir(indiv_glut_path, as_float=False)
 
-#%%
+#%% Write the stacks and image names to a file
 my_func.save_img_list_as_array(gad_img_list, "created_data/gad_img_stacks_arr")
 my_func.save_img_list_as_array(glut_img_list, "created_data/glut_img_stacks_arr")
+
+np.save(np.asarray("created_data/gad_img_names_arr", gad_img_names_list))
+np.save(np.asarray("created_data/glut_img_names_arr", glut_img_names_list))

@@ -18,17 +18,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #%% Load the data
-masked_gad_means_arr = np.load("created_data/gad_MECE_mask_means.npy")
-masked_glut_means_arr = np.load("created_data/glut_MECE_mask_means.npy")
-
-masked_gad_means_list = list(masked_gad_means_arr)
-masked_glut_means_list = list(masked_glut_means_arr)
+masked_gad_means_list = list(np.load("created_data/gad_MECE_mask_means.npy"))
+masked_glut_means_list = list(np.load("created_data/glut_MECE_mask_means.npy"))
 mask_volume_list = list(np.load("created_data/MECE_mask_volumes.npy"))
 mask_names_list = list(np.load("created_data/MECE_mask_names.npy"))
 
-#%% Create mean vs variance scatter plots
+#%% Get the means and variances accross image stacks for each region
+#TODO possibly change this whole script to operate on arrays instead of lists
 #NOTE do I need to pay attantion to the sampling bias here?
-# Get the means and variances accross image stacks for each region
 gad_means = [np.mean(vals) for vals in masked_gad_means_list]
 glut_means = [np.mean(vals) for vals in masked_glut_means_list]
 
@@ -38,6 +35,7 @@ glut_vars = [np.var(vals) for vals in masked_glut_means_list]
 max_volume = np.max(mask_volume_list)
 mask_volume_list = [vol/max_volume for vol in mask_volume_list]
 
+#%% Create the mean ns variance scatter plots
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20,10))
 c = ax1.scatter(gad_means, gad_vars, c=mask_volume_list, s=80, alpha=0.8)
 ax1.plot(np.unique(gad_means), np.poly1d(np.polyfit(gad_means, gad_vars, 2))(np.unique(gad_means)))

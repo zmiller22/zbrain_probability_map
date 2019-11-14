@@ -23,14 +23,16 @@ indiv_glut_path = "/mnt/c/Users/TracingPC1/Documents/zbrain_analysis/vglutGFP_in
 
 
 # Read individual image stacks into lists
-gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=False)
-glut_img_list = my_func.read_img_dir(indiv_glut_path, as_float=False)
+gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=False)[0]
+glut_img_list, glut_img_names_list = my_func.read_img_dir(indiv_glut_path, as_float=False)[0]
 
+float_gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=True)[0]
+float_glut_img_list  = my_func.read_img_dir(indiv_glut_path, as_float=True)[0]
+
+#%% Write voxel data to a text file
 my_func.create_voxel_data_file(gad_img_list, "gad_vox_vals.txt")
 my_func.create_voxel_data_file(glut_img_list, "glut_vox_vals.txt")
 
-float_gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=True)
-float_glut_img_list = my_func.read_img_dir(indiv_glut_path, as_float=True)
-
 my_func.create_voxel_data_file(float_gad_img_list, "float_gad_vox_vals.txt")
 my_func.create_voxel_data_file(float_glut_img_list, "float_glut_vox_vals.txt")
+

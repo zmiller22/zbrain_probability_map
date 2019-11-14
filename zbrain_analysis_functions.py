@@ -9,6 +9,7 @@ import os
 import numpy as np
 import numpy.random as rand
 import random
+import itertools
 import pandas as pd
 import skimage as si
 import time
@@ -20,16 +21,18 @@ def read_img_dir(dir_path, as_float):
     
     img_directory = os.fsencode(dir_path)
     img_list = []
+    img_names_list = []
     
     for file in os.listdir(img_directory):
         filename = os.fsdecode(file)
         file_path = os.path.join(dir_path, filename)
+        img_names_list.append(filename)
         if as_float == True:
             img_list.append(si.img_as_float(si.io.imread(file_path)))
         elif as_float == False:
             img_list.append(si.io.imread(file_path))
         
-    return img_list
+    return img_list, img_names_list
 
 def get_voxel_vector(z, x, y, img_list):
     """Returns a numpy vector of the values contained in voxel x,y,z for each image stack
@@ -134,8 +137,32 @@ def save_img_list_as_array(img_list, file_name):
     
     return None
 
-#TODO write a function that takes in an array and turns it into a list along its last 
-# dimension
+def RANSAC_fish_var_mean_ratio(fish_array, N):
+    """Tests the varaince/mean ratio for all voxels with all combinations of the fish with
+    1 througn N fish missing"""
+    dims = fish_array.shape
+    comb_nums_list = list(range(dims[-1]-N, dims[-1]))
+    idx_list = list(range(dims[-1]))
+    
+    idx_combs_list = list(map(lambda a : list(itertools.combinations(idx_list, a)), comb_nums_list))
+    idx_combs_list = [list(i) for sublist in idx_combs_list for i in sublist]
+    
+    #TODO get this for both glut and gad, also impliment the 4d case
+    # This is the analysis for the MECE regions (2d array, rows are regions and cols are fish)
+    if len(dims) == 2:
+        comb_nums_list = list(range(dims[-1]-N, dims[-1]))
+        idx_list = list(range(dims[-1]))
+        
+        idx_combs_list = list(map(lambda a : list(itertools.combinations(idx_list, a)), comb_nums_list))
+        idx_combs_list = [list(i) for sublist in idx_combs_list for i in sublist]
+        
+        means_arr = np.asarray([np.mean(fish_array[:,subsample], axis=1) for subsample in idx_combs_list])
+        var_arr = np.asarray([np.var(fish_array[:,subsample], axis=1) for subsample in idx_combs_list])
+        #TODO use the names to see which images are bad
+            
+    
+    return means_arr, var_arr
+    
 
 
     

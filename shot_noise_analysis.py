@@ -33,6 +33,7 @@ gad_img_list = my_func.read_img_dir(indiv_gad_path, as_float=False)
 
 #%% Get the normalized mean, variance, and difference between the mean and variance of each
 # voxel accross the gad images
+#TODO add this for the glut image stacks
 gad_img_arr = np.stack(gad_img_list)
 
 gad_mean_arr = np.rint(np.mean(gad_img_arr, axis=0))
